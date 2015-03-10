@@ -9,6 +9,7 @@ import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
@@ -64,9 +65,9 @@ public class Application implements IApplication {
 			/*
 			 * Step 3 : use a file explorer to traverse the file system; print the name of each directory and file
 			 */
-			Writer writer = new StringWriter(); // we create a special writer that will send characters into a string (memory)
-			app.printFileNames(writer);         // we hand over this writer to the printFileNames method
-			LOG.info(writer.toString());       // we dump the whole result on the console
+			Writer writer = new StringWriter();	// we create a special writer that will send characters into a string (memory)
+			app.printFileNames(writer);					// we hand over this writer to the printFileNames method
+			LOG.info(writer.toString());				// we dump the whole result on the console
 
 			/*
 			 * Step 4 : process the quote files, by applying 2 transformations to their content
@@ -125,7 +126,23 @@ public class Application implements IApplication {
 	 * @throws IOException 
 	 */
 	void storeQuote(Quote quote, String filename) throws IOException {
-		throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+		/**
+		 * Définition du chemin d'accès au fichier.
+		 */
+		String pathOfFile = 
+				WORKSPACE_DIRECTORY + '/'
+				+ quote.getTags()[0] + '/'
+				+ quote.getTags()[1] + '/'
+				+ quote.getTags()[2] + '/'
+				+ filename;
+
+		/**
+		 * Creation du fichier et des répertoires si nécessaire puis écriture de la citation.
+		 */
+		File quoteFile = new File(pathOfFile);
+		FileWriter quoteFileWriter = new FileWriter(quoteFile);
+		quoteFileWriter.write(quote.getQuote());
 	}
 
 	/**
@@ -139,16 +156,20 @@ public class Application implements IApplication {
 			public void visit(File file) {
 				/*
 				 * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-				 * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
+				 * of the IFileVisitor interface inline. You just have to add the body of the visit method, which should
 				 * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
 				 */
+				String[] filesNames = file.list();
+
+				for (int i = 0; i < filesNames.length; i++)
+					System.out.println(filesNames[i]);
 			}
 		});
 	}
 
 	@Override
 	public String getAuthorEmail() {
-		throw new UnsupportedOperationException("The student has not implemented this method yet.");
+		return "contoso@heig-vd.ch";
 	}
 
 	@Override

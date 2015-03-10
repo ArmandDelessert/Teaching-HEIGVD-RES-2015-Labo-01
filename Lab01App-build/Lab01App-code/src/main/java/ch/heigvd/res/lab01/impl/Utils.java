@@ -1,5 +1,8 @@
 package ch.heigvd.res.lab01.impl;
 
+import java.io.BufferedReader;
+import java.io.StringReader;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +23,18 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+		String[] linesArray = new String[1];
+		BufferedReader reader = new BufferedReader(new StringReader(lines));
+
+		int i = 0;
+		try {
+			do {
+				linesArray[i] = reader.readLine();
+			} while (linesArray[i++] != null);
+		}
+		catch(IOException e) {}
+
+		return linesArray;
   }
 
 }

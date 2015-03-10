@@ -27,44 +27,48 @@ import java.util.logging.Logger;
  */
 public abstract class FileTransformer implements IFileVisitor {
 
-  private static final Logger LOG = Logger.getLogger(FileTransformer.class.getName());
-  private final List<FilterWriter> filters = new ArrayList<>();
-  
-  /**
-   * The subclasses implement this method to define what transformation(s) are
-   * applied when writing characters to the output writer. The visit(File file)
-   * method creates an output file and creates a corresponding writer. It then
-   * calls decorateWithFilters and passes the writer as argument. The method
-   * wraps 0, 1 or more filter writers around the original writer and returns 
-   * the result.
-   * 
-   * @param writer the writer connected to the output file
-   * @return the writer decorated by 0, 1 or more filter writers
-   */
-  public abstract Writer decorateWithFilters(Writer writer);
+	private static final Logger LOG = Logger.getLogger(FileTransformer.class.getName());
+	private final List<FilterWriter> filters = new ArrayList<>();
 
-  @Override
-  public void visit(File file) {
-    if (!file.isFile()) {
-      return;
-    }
-    try {
-      Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
-      Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"));
-      writer = decorateWithFilters(writer);
+	/**
+	 * The subclasses implement this method to define what transformation(s) are
+	 * applied when writing characters to the output writer. The visit(File file)
+	 * method creates an output file and creates a corresponding writer. It then
+	 * calls decorateWithFilters and passes the writer as argument. The method
+	 * wraps 0, 1 or more filter writers around the original writer and returns 
+	 * the result.
+	 * 
+	 * @param writer the writer connected to the output file
+	 * @return the writer decorated by 0, 1 or more filter writers
+	 */
+	public abstract Writer decorateWithFilters(Writer writer);
 
-      /*
-       * There is a missing piece here: you have an input reader and an ouput writer (notice how the 
-       * writer has been decorated by the concrete subclass!). You need to write a loop to read the
-       * characters and write them to the writer.
-       */
-      
-      reader.close();
-      writer.flush();
-      writer.close();
-    } catch (IOException ex) {
-      LOG.log(Level.SEVERE, null, ex);
-    }
-  }
+	@Override
+	public void visit(File file) {
+		if (!file.isFile()) {
+			return;
+		}
+		try {
+			Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
+			Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"));
+			writer = decorateWithFilters(writer);
+
+			/*
+			 * There is a missing piece here: you have an input reader and an ouput writer (notice how the 
+			 * writer has been decorated by the concrete subclass!). You need to write a loop to read the
+			 * characters and write them to the writer.
+			 */
+			char[] cbuf = new char[2];
+			int off = 0, len = 1;
+			while ((reader.read(cbuf, off++, len)) != -1)
+				writer.write(cbuf[0]);
+
+			reader.close();
+			writer.flush();
+			writer.close();
+		} catch (IOException ex) {
+			LOG.log(Level.SEVERE, null, ex);
+		}
+	}
 
 }
