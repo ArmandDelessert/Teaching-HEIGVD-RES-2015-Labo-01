@@ -107,7 +107,11 @@ public class Application implements IApplication {
 	 * @throws IOException 
 	 */
 	void clearOutputDirectory() throws IOException {
-		FileUtils.deleteDirectory(new File(WORKSPACE_DIRECTORY));    
+		File rootDirectory = new File(WORKSPACE_DIRECTORY);
+		FileUtils.deleteDirectory(rootDirectory);
+		rootDirectory.mkdir();
+
+
 	}
 
 	/**
@@ -126,21 +130,20 @@ public class Application implements IApplication {
 	 * @throws IOException 
 	 */
 	void storeQuote(Quote quote, String filename) throws IOException {
+		String[] tags = quote.getTags();
 
 		/**
 		 * Définition du chemin d'accès au fichier.
 		 */
-		String pathOfFile = 
-				WORKSPACE_DIRECTORY + '/'
-				+ quote.getTags()[0] + '/'
-				+ quote.getTags()[1] + '/'
-				+ quote.getTags()[2] + '/'
-				+ filename;
+		String pathOfFile = WORKSPACE_DIRECTORY + '/';
+		for (int i = 0; i < tags.length; i++)
+			pathOfFile += tags[i] + '/';
 
 		/**
 		 * Creation du fichier et des répertoires si nécessaire puis écriture de la citation.
 		 */
-		File quoteFile = new File(pathOfFile);
+		new File(pathOfFile).mkdirs();
+		File quoteFile = new File(pathOfFile + filename);
 		FileWriter quoteFileWriter = new FileWriter(quoteFile);
 		quoteFileWriter.write(quote.getQuote());
 	}
@@ -159,10 +162,13 @@ public class Application implements IApplication {
 				 * of the IFileVisitor interface inline. You just have to add the body of the visit method, which should
 				 * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
 				 */
-				String[] filesNames = file.list();
+				String[] fileNames = file.list();
 
-				for (int i = 0; i < filesNames.length; i++)
-					System.out.println(filesNames[i]);
+				try {
+					for (int i = 0; i < fileNames.length; i++)
+						writer.write(fileNames[i]);
+				}
+				catch(IOException e) {}
 			}
 		});
 	}

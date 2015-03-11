@@ -1,7 +1,9 @@
 package ch.heigvd.res.lab01.impl.filters;
 
+import java.io.BufferedReader;
 import java.io.FilterWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.Writer;
 import java.util.logging.Logger;
 
@@ -25,12 +27,26 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
 	@Override
 	public void write(String str, int off, int len) throws IOException {
-		throw new UnsupportedOperationException("The student has not implemented this method yet.");
+		String[] linesArray = new String[1];
+		BufferedReader reader = new BufferedReader(new StringReader(str));
+
+		int i = 0;
+		try {
+			do {
+				linesArray[i] = reader.readLine();
+			} while (linesArray[i++] != null);
+		}
+		catch(IOException e) {}
+
+		for (i = 0; i < linesArray.length; i++)
+		{
+			super.write(Integer.toString(i + 1) + "\t" + linesArray[i] + "\n", off, len);
+		}
 	}
 
 	@Override
 	public void write(char[] cbuf, int off, int len) throws IOException {
-		throw new UnsupportedOperationException("The student has not implemented this method yet.");
+		this.write(cbuf.toString(), off, len);
 	}
 
 	@Override
