@@ -93,6 +93,8 @@ public class Application implements IApplication {
 			 * one method provided by this class, which is responsible for storing the content of the
 			 * quote in a text file (and for generating the directories based on the tags).
 			 */
+			this.storeQuote(quote, "quote-" + i + ".utf8");
+
 			LOG.info(quote.getSource());
 			for (String tag : quote.getTags()) {
 				LOG.info("> " + tag);
@@ -163,19 +165,17 @@ public class Application implements IApplication {
 				 * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
 				 */
 				String[] fileNames = file.list();
-
 				try {
 					for (int i = 0; i < fileNames.length; i++)
 						writer.write(fileNames[i]);
-				}
-				catch(IOException e) {}
+				} catch(IOException e) {}
 			}
 		});
 	}
 
 	@Override
 	public String getAuthorEmail() {
-		return "contoso@heig-vd.ch";
+		return "armand.delessert@heig-vd.ch";
 	}
 
 	@Override
