@@ -14,15 +14,15 @@ import java.io.File;
  * @author Olivier Liechti
  */
 public interface IFileExplorer {
-  
-  /**
-   * When this method is invoked, it traverses the file system under the
-   * rootDirectory directory. For each encountered file or directory, it
-   * calls visitor.visit(file).
-   * 
-   * @param rootDirectory the directory where to start the traversal
-   * @param vistor defines the operation to be performed on each file
-   */
-  public void explore(File rootDirectory, IFileVisitor vistor);
-  
+
+	/**
+	 * When this method is invoked, it traverses the file system under the
+	 * rootDirectory directory. For each encountered file or directory, it
+	 * calls visitor.visit(file).
+	 * 
+	 * @param rootDirectory the directory where to start the traversal
+	 * @param vistor defines the operation to be performed on each file
+	 */
+	public void explore(File rootDirectory, IFileVisitor vistor);
+
 }

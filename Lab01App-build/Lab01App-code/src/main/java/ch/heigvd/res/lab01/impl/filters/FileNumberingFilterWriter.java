@@ -1,9 +1,8 @@
 package ch.heigvd.res.lab01.impl.filters;
 
-import java.io.BufferedReader;
+import ch.heigvd.res.lab01.impl.Utils;
 import java.io.FilterWriter;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.Writer;
 import java.util.logging.Logger;
 
@@ -19,6 +18,9 @@ import java.util.logging.Logger;
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
+	private long lineNumber = 1;
+	private char previousChar;
+
 	private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
 	public FileNumberingFilterWriter(Writer out) {
@@ -27,31 +29,38 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
 	@Override
 	public void write(String str, int off, int len) throws IOException {
-		String[] linesArray = new String[1];
-		BufferedReader reader = new BufferedReader(new StringReader(str));
+		String nextLine[] = Utils.getNextLine(str.substring(off, off + len));
+		String s = new String();
 
-		int i = 0;
-		try {
-			do {
-				linesArray[i] = reader.readLine();
-			} while (linesArray[i++] != null);
-		}
-		catch(IOException e) {}
+		if (lineNumber == 1)
+			s = (lineNumber++) + "\t";
 
-		for (i = 0; i < linesArray.length; i++)
-		{
-			super.write(Integer.toString(i + 1) + "\t" + linesArray[i] + "\n", off, len);
+		while (!nextLine[0].isEmpty()) {
+			s += nextLine[0] + (lineNumber++) + "\t";
+			nextLine = Utils.getNextLine(nextLine[1]);
 		}
+
+		s += nextLine[1];
+		out.write(s);
 	}
 
 	@Override
 	public void write(char[] cbuf, int off, int len) throws IOException {
-		this.write(cbuf.toString(), off, len);
+		 write(new String(cbuf).substring(off, off + len));
 	}
 
 	@Override
 	public void write(int c) throws IOException {
-		throw new UnsupportedOperationException("The student has not implemented this method yet.");
-	}
+		char chr = Character.toChars(c)[0];
 
+		if (lineNumber == 1
+						|| previousChar == '\n'
+						|| (previousChar == '\r' && chr != '\n')) {
+			out.write((lineNumber++) + "\t" + chr);
+		}
+		else {
+			out.write(chr);
+		}
+		previousChar = chr;
+	}
 }

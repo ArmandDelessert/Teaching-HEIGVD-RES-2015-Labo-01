@@ -13,39 +13,39 @@ import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Quote implements Serializable {
-  @JsonProperty
-  private String[] tags;
-  @JsonProperty
-  private String quote;
-  @JsonProperty
-  private String link;
-  @JsonProperty
-  private String source;
+	@JsonProperty
+	private String[] tags;
+	@JsonProperty
+	private String quote;
+	@JsonProperty
+	private String link;
+	@JsonProperty
+	private String source;
 
-  public Quote() {  
-  }
-  
-  public Quote(String[] tags, String quote, String link, String source) {
-    this.tags = tags;
-    this.quote = quote;
-    this.link = link;
-    this.source = source;
-  }
+	public Quote() {  
+	}
 
-  public String[] getTags() {
-    return tags;
-  }
+	public Quote(String[] tags, String quote, String link, String source) {
+		this.tags = tags;
+		this.quote = quote;
+		this.link = link;
+		this.source = source;
+	}
 
-  public String getQuote() {
-    return quote;
-  }
+	public String[] getTags() {
+		return tags;
+	}
 
-  public String getLink() {
-    return link;
-  }
+	public String getQuote() {
+		return quote;
+	}
 
-  public String getSource() {
-    return source;
-  }
+	public String getLink() {
+		return link;
+	}
+
+	public String getSource() {
+		return source;
+	}
 
 }

@@ -17,23 +17,23 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class SimpleObjectMapperProvider implements ContextResolver<ObjectMapper> {
 
-  private static final Logger LOG = Logger.getLogger(SimpleObjectMapperProvider.class.getName());
+	private static final Logger LOG = Logger.getLogger(SimpleObjectMapperProvider.class.getName());
 
-  final ObjectMapper defaultObjectMapper;
+	final ObjectMapper defaultObjectMapper;
 
-  public SimpleObjectMapperProvider() {
-    defaultObjectMapper = createDefaultMapper();
-  }
+	public SimpleObjectMapperProvider() {
+		defaultObjectMapper = createDefaultMapper();
+	}
 
-  @Override
-  public ObjectMapper getContext(Class<?> type) {
-    return defaultObjectMapper;
-  }
+	@Override
+	public ObjectMapper getContext(Class<?> type) {
+		return defaultObjectMapper;
+	}
 
-  private static ObjectMapper createDefaultMapper() {
-    final ObjectMapper result = new ObjectMapper();
-    result.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-    return result;
-  }
+	private static ObjectMapper createDefaultMapper() {
+		final ObjectMapper result = new ObjectMapper();
+		result.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		return result;
+	}
 
 }

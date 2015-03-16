@@ -23,18 +23,26 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-		String[] linesArray = new String[1];
-		BufferedReader reader = new BufferedReader(new StringReader(lines));
+		String[] strings = new String[2];
 
-		int i = 0;
-		try {
-			do {
-				linesArray[i] = reader.readLine();
-			} while (linesArray[i++] != null);
+		strings[0] = "";
+		strings[1] = lines;
+
+		char current;
+		boolean windowsEndofLine = false;
+		for (int i = 0; i < lines.length() ; i++)
+		{
+				current = lines.charAt(i);
+				if (current == '\n' || current == '\r')
+				{
+						windowsEndofLine = (current == '\r' && i < lines.length() - 1 && lines.charAt(i + 1) == '\n');
+						strings[0] = lines.substring(0, i) + current + (windowsEndofLine? "\n" : "");
+						strings[1] = lines.substring(i + (windowsEndofLine? 2 : 1));
+						break;
+				}
 		}
-		catch(IOException e) {}
 
-		return linesArray;
+		return strings;
   }
 
 }

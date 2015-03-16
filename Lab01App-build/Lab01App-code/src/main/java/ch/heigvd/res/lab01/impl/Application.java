@@ -9,7 +9,6 @@ import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
@@ -109,11 +108,7 @@ public class Application implements IApplication {
 	 * @throws IOException 
 	 */
 	void clearOutputDirectory() throws IOException {
-		File rootDirectory = new File(WORKSPACE_DIRECTORY);
-		FileUtils.deleteDirectory(rootDirectory);
-		rootDirectory.mkdir();
-
-
+		FileUtils.deleteDirectory(new File(WORKSPACE_DIRECTORY));
 	}
 
 	/**
@@ -142,12 +137,24 @@ public class Application implements IApplication {
 			pathOfFile += tags[i] + '/';
 
 		/**
-		 * Creation du fichier et des répertoires si nécessaire puis écriture de la citation.
+		 * Creation des répertoires si nécessaire.
 		 */
-		new File(pathOfFile).mkdirs();
+		File directory = new File(pathOfFile);
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+
+		/**
+		 * Creation du fichier si nécessaire puis écriture de la citation.
+		 */
 		File quoteFile = new File(pathOfFile + filename);
-		FileWriter quoteFileWriter = new FileWriter(quoteFile);
-		quoteFileWriter.write(quote.getQuote());
+		if (!quoteFile.exists()) {
+			quoteFile.createNewFile();
+		}
+
+		OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(""), "UTF-8");
+		writer.write(quote.getQuote());
+		writer.close();
 	}
 
 	/**
@@ -164,10 +171,19 @@ public class Application implements IApplication {
 				 * of the IFileVisitor interface inline. You just have to add the body of the visit method, which should
 				 * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
 				 */
-				String[] fileNames = file.list();
 				try {
-					for (int i = 0; i < fileNames.length; i++)
-						writer.write(fileNames[i]);
+					if (file.isDirectory())
+					{
+						String[] fileNames = file.list();
+						for (int i = 0; i < fileNames.length; i++) {
+							writer.write(fileNames[i] + '\n');
+							System.out.println(fileNames[i] + '\n');
+						}
+					}
+					else {
+						writer.write(file.getPath());
+						System.out.println(file.getPath() + '\n');
+					}
 				} catch(IOException e) {}
 			}
 		});

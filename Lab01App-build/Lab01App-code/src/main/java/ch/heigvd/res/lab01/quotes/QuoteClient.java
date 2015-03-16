@@ -19,24 +19,24 @@ import org.glassfish.jersey.jackson.JacksonFeature;
  */
 public class QuoteClient {
 
-  static String WEB_SERVICE_ENDPOINT = "http://www.iheartquotes.com/api/v1/random?min_lines=5&format=json";
+	static String WEB_SERVICE_ENDPOINT = "http://www.iheartquotes.com/api/v1/random?min_lines=5&format=json";
 
-  /**
-   * Use this method to invoke the iheartquotes.com web service and receive
-   * an instance of a Quote.
-   * 
-   * @return an instance of Quote, with values provided by the web service
-   */
-  public Quote fetchQuote() {
-    Client client = ClientBuilder.newBuilder()
-      .register(JacksonFeature.class)
-      .register(SimpleObjectMapperProvider.class)
-      .build();
-    WebTarget target = client.target(WEB_SERVICE_ENDPOINT);
-    Invocation.Builder invocationBuilder = target.request();
-    Response response = invocationBuilder.get();
-    Quote quote = response.readEntity(Quote.class);
-    return quote;
-  }
+	/**
+	 * Use this method to invoke the iheartquotes.com web service and receive
+	 * an instance of a Quote.
+	 * 
+	 * @return an instance of Quote, with values provided by the web service
+	 */
+	public Quote fetchQuote() {
+		Client client = ClientBuilder.newBuilder()
+			.register(JacksonFeature.class)
+			.register(SimpleObjectMapperProvider.class)
+			.build();
+		WebTarget target = client.target(WEB_SERVICE_ENDPOINT);
+		Invocation.Builder invocationBuilder = target.request();
+		Response response = invocationBuilder.get();
+		Quote quote = response.readEntity(Quote.class);
+		return quote;
+	}
 
 }
